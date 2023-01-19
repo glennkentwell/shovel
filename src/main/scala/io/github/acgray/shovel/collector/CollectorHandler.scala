@@ -32,6 +32,10 @@ class CollectorHandler(private val streamNameOverride: Option[String] = None,
                        private val serializer: Serializer = new ThriftSerializer)
   extends RequestHandler[LambdaProxyRequest, LambdaProxyResponse] {
 
+  // https://github.com/scala/bug/issues/4278
+  // zero-argument constructor
+  def this() { this(streamNameOverride = None, sinkOverride = None, serializer = new ThriftSerializer) }
+
   private val streamName = streamNameOverride
     .orElse(Properties.envOrNone("KINESIS_STREAM_NAME"))
     .orElse(throw new RuntimeException("KINESIS_STREAM_NAME is required"))
