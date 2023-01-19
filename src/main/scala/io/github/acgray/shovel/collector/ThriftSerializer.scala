@@ -20,10 +20,12 @@ class ThriftSerializer(private val ser: TSerializer = new TSerializer)
         "UTF-8",
         s"serverless-collector-${BuildInfo.version}-kinesis")
 
-      payload.querystring = Utils.mapToQueryString(
-        original
-          .getQueryStringParameters
-          .toMap)
+      if (original != null && original.getQueryStringParameters != null) {
+        payload.querystring = Utils.mapToQueryString(
+          original
+            .getQueryStringParameters
+            .toMap)
+      }
       payload.body = original.getBody
       payload.path = original.getPath
       payload.userAgent = original.getHeaders.get("User-Agent")
